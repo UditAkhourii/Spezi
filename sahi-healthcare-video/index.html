@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #07080f;
+        font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      }
+
+      .clip { position: absolute; }
+
+      #bg-grid {
+        width: 1920px; height: 1080px;
+        background-image:
+          linear-gradient(rgba(0,212,180,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,212,180,0.04) 1px, transparent 1px);
+        background-size: 80px 80px;
+        opacity: 0;
+      }
+
+      #bg-pulse {
+        width: 900px; height: 900px;
+        left: 510px; top: 90px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse, rgba(0,212,180,0.12) 0%, transparent 70%);
+        opacity: 0;
+      }
+
+      #label-tag {
+        top: 56px; left: 88px;
+        background: #00d4b4;
+        color: #07080f;
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        padding: 10px 28px;
+        border-radius: 4px;
+        opacity: 0;
+      }
+
+      #progress-bar {
+        bottom: 0; left: 0;
+        width: 0px; height: 4px;
+        background: linear-gradient(90deg, #00d4b4, #ff6b35);
+        opacity: 0;
+      }
+
+      /* Scene 1 */
+      #ht-prefix {
+        top: 180px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: #00d4b4; letter-spacing: 6px;
+        opacity: 0;
+      }
+      #ht-main {
+        top: 240px; left: 88px;
+        font-size: 100px; font-weight: 900;
+        color: #ffffff; line-height: 1;
+        width: 1750px; opacity: 0;
+      }
+      #ht-main span { color: #ff6b35; }
+      #ht-sub {
+        top: 490px; left: 88px;
+        font-size: 46px; font-weight: 400;
+        color: rgba(255,255,255,0.75);
+        width: 1200px; line-height: 1.35;
+        opacity: 0;
+      }
+      #ht-cta {
+        top: 650px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: #ff6b35; letter-spacing: 2px;
+        opacity: 0;
+      }
+
+      /* Scene 2 */
+      #s2-week {
+        top: 160px; left: 88px;
+        font-size: 36px; font-weight: 600;
+        color: rgba(255,255,255,0.5); letter-spacing: 3px;
+        opacity: 0;
+      }
+      #s2-launched {
+        top: 210px; left: 88px;
+        font-size: 80px; font-weight: 900;
+        color: #ffffff; line-height: 1.1;
+        width: 1100px; opacity: 0;
+      }
+      #s2-launched span { color: #00d4b4; }
+      #s2-full {
+        top: 410px; left: 88px;
+        font-size: 38px; font-weight: 400;
+        color: rgba(255,255,255,0.6);
+        width: 900px; line-height: 1.4;
+        opacity: 0;
+      }
+      #s2-card {
+        top: 160px; right: 88px;
+        width: 640px; height: 330px;
+        border: 2px solid rgba(0,212,180,0.4);
+        border-radius: 16px;
+        background: rgba(0,212,180,0.06);
+        display: flex; align-items: center;
+        justify-content: center; flex-direction: column;
+        opacity: 0;
+      }
+      #s2-card .big { font-size: 96px; font-weight: 900; color: #00d4b4; }
+      #s2-card .sm  { font-size: 28px; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 2px; margin-top: 8px; }
+      #s2-notpdf {
+        top: 520px; left: 88px;
+        font-size: 52px; font-weight: 900;
+        color: #ffffff; opacity: 0;
+      }
+      #s2-notpdf span { color: #ff6b35; text-decoration: line-through; opacity: 0.7; }
+      #s2-realframe {
+        top: 600px; left: 88px;
+        font-size: 40px; font-weight: 700;
+        color: #00d4b4; opacity: 0;
+      }
+
+      /* Scene 3 */
+      #s3-title {
+        top: 80px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: rgba(255,255,255,0.4); letter-spacing: 4px;
+        opacity: 0;
+      }
+      .pillar {
+        left: 88px; width: 1750px;
+        display: flex; align-items: flex-start; gap: 24px;
+        opacity: 0;
+      }
+      #p1 { top: 160px; }
+      #p2 { top: 350px; }
+      #p3 { top: 540px; }
+      .pillar .dot {
+        width: 14px; height: 14px; border-radius: 50%;
+        background: #00d4b4; flex-shrink: 0; margin-top: 18px;
+      }
+      .pillar .text { font-size: 44px; font-weight: 700; color: #ffffff; line-height: 1.3; }
+      .pillar .text em { color: #00d4b4; font-style: normal; }
+      #p3 .text { font-size: 38px; }
+
+      /* Scene 4 */
+      #s4-title {
+        top: 80px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: rgba(255,255,255,0.4); letter-spacing: 4px;
+        opacity: 0;
+      }
+      #s4-changes {
+        top: 140px; left: 88px;
+        font-size: 72px; font-weight: 900;
+        color: #ffffff; opacity: 0;
+      }
+      #s4-changes span { color: #ff6b35; }
+      #s4-before {
+        top: 280px; left: 88px;
+        font-size: 40px; font-weight: 400;
+        color: rgba(255,255,255,0.55); line-height: 1.5;
+        opacity: 0;
+      }
+      #s4-arrow {
+        top: 480px; left: 88px;
+        font-size: 64px; font-weight: 900;
+        color: #00d4b4; opacity: 0;
+      }
+      #s4-now {
+        top: 560px; left: 88px;
+        font-size: 76px; font-weight: 900;
+        color: #ffffff; opacity: 0;
+      }
+      #s4-now span { color: #00d4b4; }
+
+      /* Scene 5 */
+      #s5-game {
+        top: 70px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: rgba(255,255,255,0.4); letter-spacing: 4px;
+        opacity: 0;
+      }
+      .q-item {
+        left: 88px;
+        font-size: 42px; font-weight: 600;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.2;
+        display: flex; align-items: center; gap: 20px;
+        opacity: 0;
+      }
+      .q-item .qmark { color: #00d4b4; font-size: 50px; font-weight: 900; }
+      #q1 { top: 140px; }
+      #q2 { top: 230px; }
+      #q3 { top: 320px; }
+      #q4 { top: 410px; }
+      #q5 { top: 500px; }
+      #q6 { top: 590px; }
+      #s5-verdict {
+        top: 720px; left: 88px;
+        font-size: 64px; font-weight: 900;
+        color: #ff6b35; letter-spacing: -1px;
+        opacity: 0;
+      }
+
+      /* Scene 6 */
+      #s6-next {
+        top: 80px; left: 88px;
+        font-size: 36px; font-weight: 700;
+        color: rgba(255,255,255,0.4); letter-spacing: 4px;
+        opacity: 0;
+      }
+      #s6-winners {
+        top: 140px; left: 88px;
+        font-size: 60px; font-weight: 900;
+        color: #ffffff; line-height: 1.15;
+        width: 1100px; opacity: 0;
+      }
+      #s6-not {
+        top: 370px; left: 88px;
+        font-size: 48px; font-weight: 700;
+        color: rgba(255,255,255,0.5); opacity: 0;
+      }
+      #s6-not span { text-decoration: line-through; }
+      #s6-cn {
+        top: 445px; left: 88px;
+        font-size: 92px; font-weight: 900;
+        color: #00d4b4; letter-spacing: -2px;
+        opacity: 0;
+      }
+      #s6-tags {
+        top: 610px; left: 88px;
+        display: flex; gap: 18px; flex-wrap: wrap;
+        width: 1750px; opacity: 0;
+      }
+      .tag {
+        background: rgba(0,212,180,0.12);
+        border: 1.5px solid rgba(0,212,180,0.35);
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 28px; font-weight: 600;
+        color: rgba(255,255,255,0.8);
+      }
+
+      /* Scene 7 */
+      #s7-signal {
+        top: 130px; left: 88px;
+        font-size: 48px; font-weight: 700;
+        color: rgba(255,255,255,0.55);
+        width: 1000px; line-height: 1.3;
+        opacity: 0;
+      }
+      #s7-sahi-big {
+        top: 290px; left: 88px;
+        font-size: 160px; font-weight: 900;
+        color: #00d4b4; letter-spacing: -4px;
+        opacity: 0;
+      }
+      #s7-defining {
+        top: 490px; left: 88px;
+        font-size: 52px; font-weight: 700;
+        color: #ffffff; width: 1000px;
+        opacity: 0;
+      }
+      #s7-question {
+        top: 700px; left: 88px;
+        font-size: 40px; font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        width: 1300px; line-height: 1.4;
+        opacity: 0;
+      }
+      #s7-question em { color: #ff6b35; font-style: normal; font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="57"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Background -->
+      <div id="bg-grid"      class="clip" data-start="0"  data-duration="57" data-track-index="1"></div>
+      <div id="bg-pulse"     class="clip" data-start="0"  data-duration="57" data-track-index="2"></div>
+      <div id="progress-bar" class="clip" data-start="0"  data-duration="57" data-track-index="3"></div>
+      <div id="label-tag"    class="clip" data-start="0"  data-duration="57" data-track-index="4">HOT TAKE</div>
+
+      <!-- Scene 1: Hot Take (0-8.5s) -->
+      <div id="ht-prefix" class="clip" data-start="0"   data-duration="8.5" data-track-index="5">STARTUP WORLD, PAY ATTENTION</div>
+      <div id="ht-main"   class="clip" data-start="0.3" data-duration="8.2" data-track-index="6">India just made healthcare AI<br><span>significantly</span> more attractive.</div>
+      <div id="ht-sub"    class="clip" data-start="2"   data-duration="6.5" data-track-index="7">And almost nobody in startups is talking about it yet.</div>
+      <div id="ht-cta"    class="clip" data-start="4"   data-duration="4.5" data-track-index="8">&#8595; Here's what changed.</div>
+
+      <!-- Scene 2: SAHI Launch (9-18.5s) -->
+      <div id="s2-week"      class="clip" data-start="9"    data-duration="9.5"  data-track-index="9">LAST WEEK</div>
+      <div id="s2-launched"  class="clip" data-start="9.3"  data-duration="9.2"  data-track-index="10">India formally<br>launched <span>SAHI</span></div>
+      <div id="s2-card"      class="clip" data-start="9.3"  data-duration="9.2"  data-track-index="11"><div class="big">SAHI</div><div class="sm">INDIA &middot; 2024</div></div>
+      <div id="s2-full"      class="clip" data-start="10.5" data-duration="8"    data-track-index="12">National Strategy for<br>AI in Healthcare</div>
+      <div id="s2-notpdf"    class="clip" data-start="13"   data-duration="5.5"  data-track-index="13"><span>NOT</span> another AI vision PDF.</div>
+      <div id="s2-realframe" class="clip" data-start="14.5" data-duration="4"    data-track-index="14">A REAL governance framework.</div>
+
+      <!-- Scene 3: Three Pillars (19-28.5s) -->
+      <div id="s3-title" class="clip" data-start="19"   data-duration="9.5" data-track-index="15">WHAT SAHI SAYS</div>
+      <div id="p1"       class="pillar clip" data-start="19.2" data-duration="9.3" data-track-index="16">
+        <div class="dot"></div>
+        <div class="text"><em>AI assists</em> doctors and health workers. <em>Not replace.</em></div>
+      </div>
+      <div id="p2"       class="pillar clip" data-start="20.5" data-duration="8" data-track-index="17">
+        <div class="dot"></div>
+        <div class="text">Systems must be <em>safe</em>, <em>accountable</em> &amp; <em>clinically trustworthy</em></div>
+      </div>
+      <div id="p3"       class="pillar clip" data-start="22"   data-duration="6.5" data-track-index="18">
+        <div class="dot"></div>
+        <div class="text"><em>Validation. Auditability. Monitoring. Data stewardship.</em><br>First-class requirements &mdash; before deployment at scale.</div>
+      </div>
+
+      <!-- Scene 4: Market Shift (29-38.5s) -->
+      <div id="s4-title"   class="clip" data-start="29"   data-duration="9.5" data-track-index="19">THE MARKET IS SHIFTING</div>
+      <div id="s4-changes" class="clip" data-start="29.2" data-duration="9.3" data-track-index="20">This changes the <span>direction.</span></div>
+      <div id="s4-before"  class="clip" data-start="30"   data-duration="8.5" data-track-index="21">Health AI used to be optimised for <strong style="color:#ff6b35">DEMOS</strong><br>Faster models. Better UX. Impressive outputs.</div>
+      <div id="s4-arrow"   class="clip" data-start="32.5" data-duration="6"   data-track-index="22">NOW &rarr;</div>
+      <div id="s4-now"     class="clip" data-start="33"   data-duration="5.5" data-track-index="23">Shifting toward <span>DEPLOYABILITY.</span></div>
+
+      <!-- Scene 5: The Questions (39-47.5s) -->
+      <div id="s5-game"    class="clip" data-start="39"   data-duration="8.5" data-track-index="24">THE NEW GAME</div>
+      <div id="q1"         class="q-item clip" data-start="39.2" data-duration="8.3" data-track-index="25"><span class="qmark">?</span> Can this survive procurement?</div>
+      <div id="q2"         class="q-item clip" data-start="39.8" data-duration="7.7" data-track-index="26"><span class="qmark">?</span> Pass hospital security review?</div>
+      <div id="q3"         class="q-item clip" data-start="40.4" data-duration="7.1" data-track-index="27"><span class="qmark">?</span> Can clinicians trust it?</div>
+      <div id="q4"         class="q-item clip" data-start="41.0" data-duration="6.5" data-track-index="28"><span class="qmark">?</span> Can regulators inspect it?</div>
+      <div id="q5"         class="q-item clip" data-start="41.6" data-duration="5.9" data-track-index="29"><span class="qmark">?</span> Can you explain how decisions were made?</div>
+      <div id="q6"         class="q-item clip" data-start="42.2" data-duration="5.3" data-track-index="30"><span class="qmark">?</span> Do consent, logging &amp; bias controls hold in production?</div>
+      <div id="s5-verdict" class="clip" data-start="44"   data-duration="3.5" data-track-index="31">THAT IS A VERY DIFFERENT GAME.</div>
+
+      <!-- Scene 6: Compliance Native (48-53.5s) -->
+      <div id="s6-next"    class="clip" data-start="48"   data-duration="5.5" data-track-index="32">THE NEXT GENERATION</div>
+      <div id="s6-winners" class="clip" data-start="48.2" data-duration="5.3" data-track-index="33">The health AI winners won't just be model companies.</div>
+      <div id="s6-not"     class="clip" data-start="49.5" data-duration="4"   data-track-index="34"><span>Not model-first.</span></div>
+      <div id="s6-cn"      class="clip" data-start="50.2" data-duration="3.3" data-track-index="35">COMPLIANCE NATIVE.</div>
+      <div id="s6-tags"    class="clip" data-start="51.2" data-duration="2.3" data-track-index="36">
+        <div class="tag">Consent Flows</div>
+        <div class="tag">Audit Trails</div>
+        <div class="tag">Human Oversight</div>
+        <div class="tag">Traceability</div>
+        <div class="tag">Validation</div>
+        <div class="tag">Governance</div>
+      </div>
+
+      <!-- Scene 7: Signal / CTA (54-57s) -->
+      <div id="s7-signal"   class="clip" data-start="54"   data-duration="3"   data-track-index="37">SAHI is the clearest signal yet &mdash;</div>
+      <div id="s7-sahi-big" class="clip" data-start="54.3" data-duration="2.7" data-track-index="38">SAHI</div>
+      <div id="s7-defining" class="clip" data-start="54.5" data-duration="2.5" data-track-index="39">India is beginning to define that future.</div>
+      <div id="s7-question" class="clip" data-start="55"   data-duration="2"   data-track-index="40">Does this make you more <em>optimistic</em> &mdash; or more <em>cautious?</em></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ease = "power3.out";
+      const easeIn = "power2.in";
+
+      tl.to("#bg-grid",  { opacity: 1, duration: 1.5, ease }, 0);
+      tl.to("#bg-pulse", { opacity: 1, duration: 2, ease }, 0);
+      tl.to("#bg-pulse", { scale: 1.15, repeat: 13, yoyo: true, duration: 4, ease: "sine.inOut" }, 0);
+      tl.to("#progress-bar", { opacity: 0.7, duration: 0.1 }, 0);
+      tl.to("#progress-bar", { width: 1920, duration: 57, ease: "none" }, 0);
+      tl.fromTo("#label-tag", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease }, 0);
+
+      tl.fromTo("#ht-prefix", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease }, 0.1);
+      tl.fromTo("#ht-main",   { opacity: 0, y: 60, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease }, 0.3);
+      tl.fromTo("#ht-sub",    { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease }, 1.8);
+      tl.fromTo("#ht-cta",    { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease }, 3.5);
+      tl.to(["#ht-prefix","#ht-main","#ht-sub","#ht-cta"], { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.05 }, 8.2);
+
+      tl.fromTo("#s2-week",      { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 9);
+      tl.fromTo("#s2-launched",  { opacity: 0, y: 50, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease }, 9.3);
+      tl.fromTo("#s2-card",      { opacity: 0, scale: 0.8, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.7, ease }, 9.3);
+      tl.fromTo("#s2-full",      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease }, 10.4);
+      tl.fromTo("#s2-notpdf",    { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease }, 12.8);
+      tl.fromTo("#s2-realframe", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease }, 14.3);
+      tl.to(["#s2-week","#s2-launched","#s2-card","#s2-full","#s2-notpdf","#s2-realframe"],
+        { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.04 }, 18.4);
+
+      tl.fromTo("#s3-title", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 19);
+      tl.fromTo("#p1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease }, 19.2);
+      tl.fromTo("#p2", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease }, 20.5);
+      tl.fromTo("#p3", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease }, 22);
+      tl.to(["#s3-title","#p1","#p2","#p3"],
+        { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.05 }, 28.4);
+
+      tl.fromTo("#s4-title",   { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 29);
+      tl.fromTo("#s4-changes", { opacity: 0, y: 50, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease }, 29.2);
+      tl.fromTo("#s4-before",  { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease }, 30);
+      tl.fromTo("#s4-arrow",   { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease }, 32.5);
+      tl.fromTo("#s4-now",     { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease }, 33);
+      tl.to(["#s4-title","#s4-changes","#s4-before","#s4-arrow","#s4-now"],
+        { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.04 }, 38.4);
+
+      tl.fromTo("#s5-game",    { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 39);
+      tl.fromTo("#q1",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 39.2);
+      tl.fromTo("#q2",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 39.7);
+      tl.fromTo("#q3",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 40.2);
+      tl.fromTo("#q4",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 40.7);
+      tl.fromTo("#q5",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 41.2);
+      tl.fromTo("#q6",         { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease }, 41.7);
+      tl.fromTo("#s5-verdict", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, ease }, 43.8);
+      tl.to(["#s5-game","#q1","#q2","#q3","#q4","#q5","#q6","#s5-verdict"],
+        { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.03 }, 47.4);
+
+      tl.fromTo("#s6-next",    { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 48);
+      tl.fromTo("#s6-winners", { opacity: 0, y: 40 },  { opacity: 1, y: 0, duration: 0.5, ease }, 48.2);
+      tl.fromTo("#s6-not",     { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease }, 49.4);
+      tl.fromTo("#s6-cn",      { opacity: 0, scale: 0.8, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease }, 50.2);
+      tl.fromTo("#s6-tags",    { opacity: 0, y: 30 },  { opacity: 1, y: 0, duration: 0.5, ease }, 51.2);
+      tl.to(["#s6-next","#s6-winners","#s6-not","#s6-cn","#s6-tags"],
+        { opacity: 0, y: -40, duration: 0.4, ease: easeIn, stagger: 0.04 }, 53.4);
+
+      tl.fromTo("#s7-signal",   { opacity: 0, y: 30 },      { opacity: 1, y: 0, duration: 0.5, ease }, 54);
+      tl.fromTo("#s7-sahi-big", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease }, 54.3);
+      tl.fromTo("#s7-defining", { opacity: 0, y: 30 },      { opacity: 1, y: 0, duration: 0.5, ease }, 54.5);
+      tl.fromTo("#s7-question", { opacity: 0, y: 20 },      { opacity: 1, y: 0, duration: 0.5, ease }, 55);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
